@@ -14,11 +14,9 @@
 # modify the passed in list.
 def remove_adjacent(nums):
   result = []
-  if len(nums) > 0: 
-    result.append(nums[0])
-    for n in range(1,len(nums)):
-      if nums[n] != nums[n-1]:
-        result.append(nums[n])
+  for num in nums:
+    if len(result) == 0 or num != result[-1]:
+      result.append(num)
   return result
 
 
@@ -33,6 +31,7 @@ def linear_merge(list1, list2):
       results.append(list1.pop(-1))
     else:
       results.append(list2.pop(-1))
+      
   results.extend(list1)
   results.extend(list2)
   results.reverse()

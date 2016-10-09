@@ -17,8 +17,8 @@
 # Return the resulting string.
 def verbing(s):
   if len(s) >= 3:
-	if s.endswith('ing'): s = s + 'ly'
-	else: s = s + 'ing'
+    if s.endswith('ing'): s = s + 'ly'
+    else: s = s + 'ing'
   return s
 
 
@@ -33,7 +33,7 @@ def verbing(s):
 def not_bad(s):
   end = s.find('bad')+3
   start = s.find('not')
-  if end > start: s = s[:start] + 'good' + s[end:]
+  if start != -1 and end > start: s = s[:start] + 'good' + s[end:]
   return s
 
 
