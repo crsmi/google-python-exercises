@@ -35,7 +35,7 @@ Note: the standard python module 'random' includes a
 random.choice(list) method which picks a random element
 from a non-empty list.
 
-For fun, feed your program to itself as input.
+For fun, feed your program to itself as input. --- Converges to a random text!
 Could work on getting it to put in linebreaks around 70
 columns, so the output looks better.
 
@@ -48,13 +48,43 @@ import sys
 def mimic_dict(filename):
   """Returns mimic dict mapping each word to list of words which follow it."""
   # +++your code here+++
-  return
+  next_word = {}
+  previous = ''
+  file = open(filename,'r')
+  input = file.read()
+  file.close()
+  words = input.split()
+  for word in words:
+    if previous in next_word:
+      next_word[previous].append(word)
+    else:
+      next_word[previous] = [word]
+    previous = word
+  return next_word
 
 
 def print_mimic(mimic_dict, word):
   """Given mimic dict and start word, prints 200 random words."""
-  # +++your code here+++
-  return
+  # +++your code here+++'
+  charcount = 0
+  output_text = ''
+  for unused_i in range(200):
+    if not word in mimic_dict:
+      word = ''
+    word = random.choice(mimic_dict[word])
+    if charcount + len(word) > 70:
+      output_text += '\n'
+      charcount = 0
+    output_text += word
+    charcount += len(word)
+    if charcount in range(1,70):
+      output_text += ' '
+      charcount += 1
+  print output_text
+  output_file = open('output.txt','w')
+  output_file.write(output_text)
+  output_file.close()
+  return #output_text
 
 
 # Provided main(), calls mimic_dict() and mimic()
