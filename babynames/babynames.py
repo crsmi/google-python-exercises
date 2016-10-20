@@ -8,6 +8,7 @@
 
 import sys
 import re
+from glob import glob
 
 """Baby Names exercise
 
@@ -41,7 +42,35 @@ def extract_names(filename):
   ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
   """
   # +++your code here+++
-  return
+  f = open(filename, 'r')
+  fileString = f.read()
+  f.close()
+  yearMatch = re.search(r'Popularity\sin\s(\d\d\d\d)', fileString)
+  if not yearMatch:
+    sys.stderr.write('Couldn\'t find the year!\n')
+    sys.exit(1)
+  year = yearMatch.group(1)
+  namesTuples = re.findall(r'<tr align="right"><td>(\d+)\</td><td>(\w+)</td><td>(\w+)</td>', fileString)
+  names = {}
+  for tuple in namesTuples:  
+    #setup the male name in names
+    if (tuple[1] in names) and (names[tuple[1]] > tuple[0]):
+      pass #do nothing if the existing rank is lower
+    else:    
+      names[tuple[1]] = tuple[0]
+      
+    #setup the female name in names
+    if (tuple[2] in names) and (names[tuple[2]] > tuple[0]):
+      pass #do nothing if the existing rank is lower
+    else:    
+      names[tuple[2]] = tuple[0]
+      
+  #build the final list    
+  namesList = [year]    
+  for name in sorted(names.keys()):
+    namesList.append(name + ' ' + names[name])
+ 
+  return namesList
 
 
 def main():
@@ -63,6 +92,17 @@ def main():
   # +++your code here+++
   # For each filename, get the names, then either print the text output
   # or write it to a summary file
+  for fileParam in args:
+    for file in glob(fileParam):
+      list = extract_names(file)
+      text = '\n'.join(list) + '\n'
+      if summary:
+        f = open(file + '.summary', 'w')
+        f.write(text)
+        f.close()
+      else:
+        print text
+  
   
 if __name__ == '__main__':
   main()
