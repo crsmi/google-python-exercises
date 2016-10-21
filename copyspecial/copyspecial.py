@@ -17,9 +17,24 @@ import commands
 
 # +++your code here+++
 # Write functions and modify main() to call them
+def get_special_paths(dir):
+  specials = []
+  filenames = os.listdir(dir)
+  for filename in filenames:
+    if re.search('__\w+__', filename):
+      specials.append(os.path.abspath(dir + '/' + filename))
+  return specials	
 
-
-
+def copy_to(paths,dir):
+  for path in paths:
+    if os.path.exists(dir) is False:
+      os.makedirs(dir)  
+    shutil.copy(path,dir)
+      
+def zip_to(paths, zippath):
+  pass
+  
+    
 def main():
   # This basic command line argument parsing code is provided.
   # Add code to call your functions below.
@@ -50,6 +65,15 @@ def main():
 
   # +++your code here+++
   # Call your functions
+  for dir in args:
+    print '\n'
+    path_list = get_special_paths(dir)
+    if todir != '':
+      copy_to(path_list,todir)
+    else:      
+      for path in path_list:
+        print path.encode('string-escape')
+	
   
 if __name__ == "__main__":
   main()
