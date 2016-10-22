@@ -25,17 +25,25 @@ def read_urls(filename):
   Screens out duplicate urls and returns the urls sorted into
   increasing order."""
   # +++your code here+++
-  print filename
   server_name = filename.split('_')[1]
   f = open(filename, 'r')
   url_list = re.findall(r'GET (\S*puzzle\S*) HTTP', f.read())
   f.close()
   result = []
   for url in url_list:
-    result.append(os.path.join("http://",server_name + '/',url[1:]))  
-  return sorted(list(set(result)))
+    result.append(os.path.join("http://",server_name + '/',url[1:]))
+  result = list(set(result))
+    
+  return sorted(result, key=special_sort)
   
-  
+def special_sort(name):
+  name_match = re.search(r'(.+-)\w+-(\w+\.jpg)$', name)
+  if name_match:
+    return name_match.group(1) + name_match.group(2)
+  else:
+    return name
+    
+    
 
 def download_images(img_urls, dest_dir):
   """Given the urls already in the correct order, downloads
@@ -46,14 +54,22 @@ def download_images(img_urls, dest_dir):
   Creates the directory if necessary.
   """
   # +++your code here+++
+  
+  file_string = '<verbatim>\n<html>\n<body>\n'
   if not os.path.exists(dest_dir):
     os.makedirs(dest_dir)
   num = 0
-  print 'Retrieving',
+  sys.stdout.write('Retrieving')
   for url in img_urls:
-    urllib.urlretrieve(url, os.path.join(dest_dir,'img' + str(num)))
+    image_name = 'img' + str(num)
+    urllib.urlretrieve(url, os.path.join(dest_dir ,image_name))
     num += 1
-    print '.',
+    file_string += '<img src="' + image_name + '">'
+    sys.stdout.write('.')
+  file_string += '\n</body>\n</html>'
+  f = open(os.path.join(dest_dir,'index.html'), 'w')
+  f.write(file_string)
+  f.close()
 
     
     
