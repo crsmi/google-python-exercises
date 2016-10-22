@@ -22,13 +22,13 @@ def get_special_paths(dir):
   filenames = os.listdir(dir)
   for filename in filenames:
     if re.search('__\w+__', filename):
-      specials.append(os.path.abspath(dir + '/' + filename))
+      specials.append(os.path.abspath(os.path.join(dir,filename)))
   return specials	
 
 def copy_to(paths,dir):
-  for path in paths:
-    if os.path.exists(dir) is False:
-      os.makedirs(dir)  
+  if not os.path.exists(dir):
+    os.makedirs(dir)
+  for path in paths:      
     shutil.copy(path,dir)
       
 def zip_to(paths, zippath):
