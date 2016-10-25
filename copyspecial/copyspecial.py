@@ -10,7 +10,7 @@ import sys
 import re
 import os
 import shutil
-import commands
+import subprocess
 
 """Copy Special exercise
 """
@@ -32,7 +32,12 @@ def copy_to(paths,dir):
     shutil.copy(path,dir)
       
 def zip_to(paths, zippath):
-  pass
+  cmd = 'zip\zip -j ' + zippath + ' ' + ' '.join(paths)
+  print "Command I'm going to do:" + cmd
+  status = subprocess.call(cmd, shell=True)
+  if status:
+    sys.stderr.write('there was an error: ')
+    sys.exit(1)
   
     
 def main():
@@ -69,7 +74,9 @@ def main():
     print '\n'
     path_list = get_special_paths(dir)
     if todir != '':
-      copy_to(path_list,todir)
+      copy_to(path_list, todir)
+    elif tozip != '':
+      zip_to(path_list, tozip)
     else:      
       for path in path_list:
         print path.encode('string-escape')
